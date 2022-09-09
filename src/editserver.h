@@ -29,7 +29,7 @@ SOFTWARE. */
 #include <ESPAsyncWebServer.h>
 
 String editPageProcessor(const String &var);
-void configureEditPages(AsyncWebServer &editServer, char * username, char * password, char * mountpoint);
+void configureEditPages(AsyncWebServer &editServer, const char * username, const char * password, const char * mountpoint);
 bool checkUserWebAuth(AsyncWebServerRequest *request);
 String listFiles(bool ishtml = false);
 String humanReadableSize(const size_t bytes);

@@ -34,26 +34,7 @@ struct Editserver
 
 Editserver es;
 
-String editPageProcessor(const String &var)
-{
-    if (var == F("FREESPIFFS"))
-    {
-        return humanReadableSize((SPIFFS.totalBytes() - SPIFFS.usedBytes()));
-    }
-
-    if (var == F("USEDSPIFFS"))
-    {
-        return humanReadableSize(SPIFFS.usedBytes());
-    }
-
-    if (var == F("TOTALSPIFFS"))
-    {
-        return humanReadableSize(SPIFFS.totalBytes());
-    }
-    return "";
-}
-
-void configureEditPages(AsyncWebServer &editServer, char * username, char * password, char * mountpoint)
+void configureEditPages(AsyncWebServer &editServer, const char * username, const char * password, const char * mountpoint)
 {
     strlcpy(es.username, username, sizeof(es.username));
     strlcpy(es.password, password, sizeof(es.password));
@@ -163,6 +144,25 @@ void configureEditPages(AsyncWebServer &editServer, char * username, char * pass
         {
             return request->requestAuthentication();
         } });
+}
+
+String editPageProcessor(const String &var)
+{
+    if (var == F("FREESPIFFS"))
+    {
+        return humanReadableSize((SPIFFS.totalBytes() - SPIFFS.usedBytes()));
+    }
+
+    if (var == F("USEDSPIFFS"))
+    {
+        return humanReadableSize(SPIFFS.usedBytes());
+    }
+
+    if (var == F("TOTALSPIFFS"))
+    {
+        return humanReadableSize(SPIFFS.totalBytes());
+    }
+    return "";
 }
 
 bool checkUserWebAuth(AsyncWebServerRequest *request)
