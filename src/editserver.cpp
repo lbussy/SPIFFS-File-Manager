@@ -53,7 +53,7 @@ String editPageProcessor(const String &var)
     return "";
 }
 
-void configureEditPages(AsyncWebServer *editServer, char * username, char * password, char * mountpoint)
+void configureEditPages(AsyncWebServer &editServer, char * username, char * password, char * mountpoint)
 {
     strlcpy(es.username, username, sizeof(es.username));
     strlcpy(es.password, password, sizeof(es.password));
@@ -66,12 +66,12 @@ void configureEditPages(AsyncWebServer *editServer, char * username, char * pass
     debugPrint(debugLine);
 #endif
 
-    editServer->onFileUpload(handleUpload);
+    editServer.onFileUpload(handleUpload);
 
-    editServer->on(es.mountpoint, HTTP_GET, [](AsyncWebServerRequest *request)
+    editServer.on(es.mountpoint, HTTP_GET, [](AsyncWebServerRequest *request)
                    {
 #ifdef EDIT_DEBUG
-        String logmessage = "(Edit Page) Client: " + request->client()->remoteIP().toString() + +" " + request->url();
+        String logmessage = "(Edit Page) Client: " + request->client().remoteIP().toString() + +" " + request->url();
         debugPrint(logmessage);
 #endif
         if (checkUserWebAuth(request))
@@ -89,10 +89,10 @@ void configureEditPages(AsyncWebServer *editServer, char * username, char * pass
             return request->requestAuthentication();
         } });
 
-    editServer->on("/listfiles", HTTP_GET, [](AsyncWebServerRequest *request)
+    editServer.on("/listfiles", HTTP_GET, [](AsyncWebServerRequest *request)
                    {
 #ifdef EDIT_DEBUG
-        String logmessage = "(List Files) Client: " + request->client()->remoteIP().toString() + " " + request->url();
+        String logmessage = "(List Files) Client: " + request->client().remoteIP().toString() + " " + request->url();
         debugPrint(logmessage);
 #endif
         if (checkUserWebAuth(request)) {
@@ -101,10 +101,10 @@ void configureEditPages(AsyncWebServer *editServer, char * username, char * pass
             return request->requestAuthentication();
         } });
 
-    editServer->on("/file", HTTP_GET, [](AsyncWebServerRequest *request)
+    editServer.on("/file", HTTP_GET, [](AsyncWebServerRequest *request)
                    {
 #ifdef EDIT_DEBUG
-        String logmessage = "(File) Client: " + request->client()->remoteIP().toString() + " " + request->url();
+        String logmessage = "(File) Client: " + request->client().remoteIP().toString() + " " + request->url();
         debugPrint(logmessage);
 #endif
         if (checkUserWebAuth(request))
@@ -117,7 +117,7 @@ void configureEditPages(AsyncWebServer *editServer, char * username, char * pass
                 const char *fileAction = request->getParam("action")->value().c_str();
 
 #ifdef EDIT_DEBUG
-                logmessage = "(File Action) Client: " + request->client()->remoteIP().toString() + " " + request->url() + "?name=" + String(fileName) + "&action=" + String(fileAction);
+                logmessage = "(File Action) Client: " + request->client().remoteIP().toString() + " " + request->url() + "?name=" + String(fileName) + "&action=" + String(fileAction);
 #endif
                 if (!SPIFFS.exists(fileName))
                 {
@@ -194,7 +194,7 @@ void handleUpload(AsyncWebServerRequest *request, const String &filename, size_t
         if (!index)
         {
 #ifdef EDIT_DEBUG
-            String logmessage = "(Upload File) Client: " + request->client()->remoteIP().toString() + " /" + filename;
+            String logmessage = "(Upload File) Client: " + request->client().remoteIP().toString() + " /" + filename;
             debugPrint(logmessage);
 #endif
             String _filename = "/" + filename;

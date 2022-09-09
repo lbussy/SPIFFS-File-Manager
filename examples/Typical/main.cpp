@@ -23,7 +23,7 @@ SOFTWARE. */
 #include "main.h"
 
 Config config;
-AsyncWebServer *server;
+AsyncWebServer server(PORT);
 
 void setup()
 {
@@ -108,18 +108,17 @@ bool beginMDNS()
 void beginWebServer()
 {
     Serial.println("Configuring Webserver.");
-    server = new AsyncWebServer(config.port);
     Serial.println("Starting Webserver.");
-    server->begin();
+    server.begin();
     configureWebHandlers(server);
     Serial.print("Webserver started on: http://");
     Serial.print(WiFi.getHostname());
     Serial.println(".local");
 }
 
-void configureWebHandlers(AsyncWebServer *thisServer)
+void configureWebHandlers(AsyncWebServer &thisServer)
 {
-    thisServer->onNotFound([](AsyncWebServerRequest *request)
+    thisServer.onNotFound([](AsyncWebServerRequest *request)
                            {
         Serial.print("(404 Response) Client: ");
         Serial.print(request->client()->remoteIP().toString());
@@ -127,7 +126,7 @@ void configureWebHandlers(AsyncWebServer *thisServer)
         Serial.println(request->url());
         request->send(404, "text/plain", "File not found."); });
 
-    thisServer->on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+    thisServer.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
                    {
         Serial.print("(Index File) Client: ");
         Serial.print(request->client()->remoteIP().toString());

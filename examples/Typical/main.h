@@ -31,7 +31,6 @@ SOFTWARE. */
 #include <Arduino.h>
 #include <ESPmDNS.h>
 
-#define EDIT_DEBUG
 #include "editserver.h"
 
 // configuration structure
@@ -73,7 +72,7 @@ void beginWiFi();
 bool beginMDNS();
 void beginWebServer();
 void listNetworkInfo();
-void configureWebHandlers(AsyncWebServer *thisServer);
+void configureWebHandlers(AsyncWebServer &thisServer);
 void die();
 
 #endif // _MAIN_H
